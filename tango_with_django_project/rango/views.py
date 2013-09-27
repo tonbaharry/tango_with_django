@@ -18,6 +18,10 @@ def index(request):
 	for category in category_list:
 		category.url = category.name.replace(' ', '_')
 	
+	# Work out the top 5 pages (in terms of views) across all categories.
+	page_list = Page.objects.order_by('-views')[:5]
+	context_dict['pages'] = page_list
+	
 	# Render the response and send it back!
 	return render_to_response('rango/index.html', context_dict, context)
 
