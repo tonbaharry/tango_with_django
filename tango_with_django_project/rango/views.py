@@ -4,6 +4,12 @@ from django.http import HttpResponse
 from rango.models import Category
 from rango.models import Page
 
+def encode_url(str):
+	return str.replace(' ', '_').lower()
+
+def decode_url(str):
+	return str.replace('_', ' ').capitalize()
+
 def index(request):
 	# Request the context of the request.
 	context = RequestContext(request)
@@ -16,7 +22,7 @@ def index(request):
 	# Loop through each category returned, creating a URL attribute.
 	# The attribute stores an encoded URL (spaces replaced by underscores).
 	for category in category_list:
-		category.url = category.name.replace(' ', '_')
+		category.url = encode_url(category.name)
 	
 	# Work out the top 5 pages (in terms of views) across all categories.
 	page_list = Page.objects.order_by('-views')[:5]
@@ -36,7 +42,7 @@ def category(request, category_name_url):
 	
 	# Change underscores in the category name to spaces.
 	# URL's don't handle spaces well, so we encode them as underscores. 
-	category_name = category_name_url.replace('_', ' ')
+	category_name = decode_url(category_name_url)
 	
 	# Build up the dictionary we will use as out template context dictionary.
 	context_dict = {'category_name': category_name}
@@ -44,7 +50,8 @@ def category(request, category_name_url):
 	try:
 		# Find the category with the given name.
 		# Raises an exception if the category doesn't exist.
-		category_model = Category.objects.get(name=category_name)
+		# We also do a case insensitive match.
+		category_model = Category.objects.get(name__iexact=category_name)
 		
 		# Retrieve all the associated pages.
 		# Note that filter returns >= 1 model instance.
