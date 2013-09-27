@@ -7,7 +7,7 @@ def index(request):
 	context = RequestContext(request)
 	
 	# Construct a dictionary to pass to the template engine as its context.
-	context_dict = {'boldmessage': "I am bold font from the context"}
+	context_dict = {'boldmessage': "I am from the context"}
 	
 	# Return a rendered response to send to the client.
 	# Note that the first parameter is the path to te template we wish to use.
