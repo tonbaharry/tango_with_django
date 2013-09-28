@@ -72,6 +72,7 @@ def category(request, category_name_url):
 	# Go render the response and return it to the client.
 	return render_to_response('rango/category.html', context_dict, context)
 
+@login_required
 def add_category(request):
     # Get the context from the request.
     context = RequestContext(request)
@@ -99,7 +100,7 @@ def add_category(request):
     # Render the form with error messages (if any).
     return render_to_response('rango/add_category.html', {'form': form}, context)
 
-
+@login_required
 def add_page(request, category_name_url):
     context = RequestContext(request)
 
@@ -208,13 +209,13 @@ def user_login(request):
 			if user.is_active:
 				login(request, user)
 				return HttpResponseRedirect('/rango/')
-			# The account is inactive; show an error message.
+			# The account is inactive; tell by adding variable to the template context.
 			else:
-				return HttpResponse("Your Rango account is disabled!")
+				return render_to_response('rango/login.html', {'disabled_account': True}, context)
 		# Invalid login details supplied!
 		else:
 			print "Invalid login details: {0}, {1}".format(username, password)
-			return HttpResponse("Invalid login details supplied.")
+			return render_to_response('rango/login.html', {'bad_details': True}, context)
 	
 	# Not a HTTP POST - most likely a HTTP GET. In this case, we render the login form for the user.
 	else:
