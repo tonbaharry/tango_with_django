@@ -19,7 +19,7 @@ def decode_url(str):
 def index(request):
 	context = RequestContext(request)
 	
-	category_list = Category.objects.all()
+	category_list = Category.objects.order_by('-likes')[:5]
 	context_dict = {'categories': category_list}
 	
 	for category in category_list:
