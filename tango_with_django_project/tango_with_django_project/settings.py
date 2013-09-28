@@ -13,6 +13,8 @@ print "Templates: ", TEMPLATE_PATH
 print "Static: ", STATIC_PATH
 print "DB: ", DATABASE_PATH
 
+LOGIN_URL = '/rango/login/'
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
