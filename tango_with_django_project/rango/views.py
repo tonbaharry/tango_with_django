@@ -21,9 +21,17 @@ def decode_url(str):
     return str.replace('_', ' ')
 
 
-def get_category_list():
-    cat_list = Category.objects.all()
-    
+def get_category_list(max_results=0, starts_with=''):
+    cat_list = []
+    if starts_with:
+        cat_list = Category.objects.filter(name__startswith=starts_with)
+    else:
+        cat_list = Category.objects.all()
+
+    if max_results > 0:
+        if (len(cat_list) > max_results):
+            cat_list = cat_list[:max_results]
+
     for cat in cat_list:
         cat.url = encode_url(cat.name)
     
@@ -95,11 +103,11 @@ def category(request, category_name_url):
         # Find the category with the given name.
         # Raises an exception if the category doesn't exist.
         # We also do a case insensitive match.
-        category_model = Category.objects.get(name__iexact=category_name)
-
+        category = Category.objects.get(name__iexact=category_name)
+        context_dict['category'] = category
         # Retrieve all the associated pages.
         # Note that filter returns >= 1 model instance.
-        pages = Page.objects.filter(category=category_model).order_by('-views')
+        pages = Page.objects.filter(category=category).order_by('-views')
 
         # Adds our results list to the template context under name pages.
         context_dict['pages'] = pages
@@ -359,3 +367,33 @@ def track_url(request):
                 pass
 
     return redirect(url)
+
+@login_required
+def like_category(request):
+    context = RequestContext(request)
+    cat_id = None
+    if request.method == 'GET':
+        cat_id = request.GET['category_id']
+
+    likes = 0
+    if cat_id:
+        category = Category.objects.get(id=int(cat_id))
+        if category:
+            likes = category.likes + 1
+            category.likes = likes
+            category.save()
+
+    return HttpResponse(likes)
+
+def suggest_category(request):
+    context = RequestContext(request)
+    cat_list = []
+    starts_with = ''
+    if request.method == 'GET':
+        starts_with = request.GET['suggestion']
+    else:
+        starts_with = request.POST['suggestion']
+
+    cat_list = get_category_list(8, starts_with)
+
+    return render_to_response('rango/category_list.html', {'cat_list': cat_list }, context)
