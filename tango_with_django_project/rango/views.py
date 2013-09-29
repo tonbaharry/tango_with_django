@@ -22,12 +22,12 @@ def decode_url(str):
 
 
 def get_category_list():
-    cat_list = []
-    cat_list = Category.objects.order_by('-views')
+    cat_list = Category.objects.all()
+    
     for cat in cat_list:
         cat.url = encode_url(cat.name)
+    
     return cat_list
-
 
 def index(request):
     context = RequestContext(request)
