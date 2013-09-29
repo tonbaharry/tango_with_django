@@ -3,6 +3,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from rango.models import Category
 from rango.models import Page
+from rango.models import UserProfile
 from rango.forms import UserForm, UserProfileForm
 from rango.forms import CategoryForm, PageForm
 from django.contrib.auth import authenticate, login, logout
@@ -22,7 +23,7 @@ def decode_url(str):
 
 def get_category_list():
     cat_list = []
-    cat_list = Category.objects.all()
+    cat_list = Category.objects.order_by('-views')
     for cat in cat_list:
         cat.url = encode_url(cat.name)
     return cat_list
@@ -332,11 +333,12 @@ def profile(request):
     cat_list = get_category_list()
     context_dict = {'cat_list': cat_list}
     u = User.objects.get(username=request.user)
+    
     try:
         up = UserProfile.objects.get(user=u)
     except:
         up = None
-
+    
     context_dict['user'] = u
     context_dict['userprofile'] = up
     return render_to_response('rango/profile.html', context_dict, context)

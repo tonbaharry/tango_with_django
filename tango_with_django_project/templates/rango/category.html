@@ -15,7 +15,7 @@
 			<a href="/rango/goto/?page_id={{page.id}}">{{page.title}}</a>
             {% if page.views > 1 %}
                 - ({{ page.views }} views)
-            {% elif  page.views == 1 %}
+            {% elif page.views == 1 %}
                 - ({{ page.views }} view)
             {% endif %}
         </li>
@@ -31,15 +31,16 @@
 </div>
 
 <div class="hero-unit">
-    <p>Search for a page.</p>
-	<form class="span8 form-search" id="search_form" method="post" action="/rango/category/{{ category_name_url }}">
-		{% csrf_token %}
-        <input type="text" class="input-long search-query"  name="query" value="{{ category_name }}" id="query" />
-        <button type="submit" class="btn btn-success" name="submit" value="Search">Search</button>
-	</form>
+	<div class="container-fluid">
+	    <p>Search for a page.</p>
+		<form class="span8 form-search" id="search_form" method="post" action="/rango/category/{{ category_name_url }}">
+			{% csrf_token %}
+	        <input type="text" class="input-long search-query"  name="query" value="{{ category_name }}" id="query" />
+	        <button type="submit" class="btn btn-success" name="submit" value="Search">Search</button>
+		</form>
+	</div>
 
-    <div class="container">
-        <div style="clear: both;">
+    <div class="container-fluid">
 	{% if result_list %}
     			<br />
 	<!-- Display search results in an ordered list -->
@@ -56,7 +57,6 @@
         <br/>
         <p>No results found</p>
 	{% endif %}
-        </div>
 	</div>
 
 </div>
