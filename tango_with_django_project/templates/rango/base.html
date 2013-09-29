@@ -26,12 +26,17 @@
           <a class="brand" href="/rango/">Rango</a>
           <div class="nav-collapse collapse">
               <p class="navbar-text pull-right">
+
             {% if user.is_authenticated %}
-                Welcome {{user.username}}
-     |              <a href="/rango/logout/">Logout</a>
+                  Welcome {{user.username}} | <a href="/rango/logout/">Logout</a>
             {% else %}
-                <a href="/rango/register/">Register</a>| <a href="/rango/login/">Login</a>
-            {% endif %}
+                <ul class="nav pull-right">
+                <li><a href="/rango/register/">Register</a></li>
+                <li><a href="/rango/login/">Login</a></li>
+                </ul>
+
+               {% endif %}
+
                 </p>
             <ul class="nav">
                 {% if user.is_authenticated %}
@@ -57,13 +62,11 @@
 
           </div><!--/.well -->
 
-            {% block belownavbar %}
-                {% endblock %}
-
         </div><!--/span-->
         <div class="span9">
 
-			{% block body_block %}{% endblock %}
+			{% block body_block %}
+            {% endblock %}
 
         </div><!--/span-->
       </div><!--/row-->
