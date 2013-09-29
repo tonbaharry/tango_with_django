@@ -29,7 +29,7 @@ def run_query(search_terms):
 	# Setup authentication with the Bing servers.
 	# The username MUST be a blank string, and put in your API key!
 	username = ''
-	bing_api_key = ''
+	bing_api_key = 'AF94717Bd19GPOryktdcDKDbiviTZUOfKnY6G1vLyvE'
 	
 	# Create a 'password manager' which handles authentication for us.
 	password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()

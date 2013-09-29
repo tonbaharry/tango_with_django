@@ -16,13 +16,12 @@
             <input type="text" class="input-long search-query"  name="query" value="" id="query" />
             <button type="submit" class="btn btn-success" name="submit" value="Search">Search</button>
 
-
 		</form>
 		
 		{% if result_list %}
         			<br />
 		<!-- Display search results in an ordered list -->
-		<div style="clear: both;">
+		<div style="clear: both;" class="span8">
 			<ol>
 			{% for result in result_list %}
 				<li>
