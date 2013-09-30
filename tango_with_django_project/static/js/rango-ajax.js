@@ -19,6 +19,7 @@ $(document).ready(function() {
 		});
 	});
 
+    
 	$('.rango-add').click(function(){
 	    var catid = $(this).attr("data-catid");
         var url = $(this).attr("data-url");
