@@ -117,8 +117,9 @@ def category(request, category_name_url):
         pass
 
     if request.method == 'POST':
-        query = request.POST['query'].strip()
+        query = request.POST.get('query')
         if query:
+            query = query.strip()
             result_list = run_query(query)
             context_dict['result_list'] = result_list
 
@@ -167,7 +168,7 @@ def add_page(request, category_name_url):
     category_name = decode_url(category_name_url)
     if request.method == 'POST':
         form = PageForm(request.POST)
-
+        
         if form.is_valid():
             # This time we cannot commit straight away.
             # Not all fields are automatically populated!
