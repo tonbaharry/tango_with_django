@@ -6,7 +6,7 @@
 <div class="hero-unit">
     <h1>{{ category_name }}</h1>
 
-
+{% if category %}
     <p>
 	<b id="like_count">{{ category.likes }}</b> people like this category
 
@@ -71,6 +71,9 @@
 			<p>No results found</p>
 		{% endif %}
 	</div>
+{% else %}
+	The specified category {{ category_name }} does not exist!</div>
+{% endif %}
 
 </div>
 
