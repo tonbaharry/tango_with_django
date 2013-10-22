@@ -307,9 +307,6 @@ def restricted(request):
 # Only allow logged in users to logout - add the @login_required decorator!
 @login_required
 def user_logout(request):
-    # Get the request's context
-    context = RequestContext(request)
-
     # As we can assume the user is logged in, we can just log them out.
     logout(request)
 
