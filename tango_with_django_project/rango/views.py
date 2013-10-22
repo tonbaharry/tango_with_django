@@ -133,7 +133,7 @@ def add_category(request):
     cat_list = get_category_list()
     context_dict = {}
     context_dict['cat_list'] = cat_list
-
+    
     # A HTTP POST?
     if request.method == 'POST':
         form = CategoryForm(request.POST)
@@ -147,8 +147,8 @@ def add_category(request):
             # The user will be shown the homepage.
             return index(request)
         else:
-            # No form passed - ignore and keep going.
-            pass
+	        # The supplied form contained errors - just print them to the terminal.
+            print form.errors
     else:
         # If the request was not a POST, display the form to enter details.
         form = CategoryForm()
