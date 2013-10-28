@@ -185,7 +185,7 @@ def add_page(request, category_name_url):
             page.save()
 
             # Now that the page is saved, display the category instead.
-            return category(request, category_name)
+            return category(request, category_name_url)
         else:
             print form.errors
     else:
