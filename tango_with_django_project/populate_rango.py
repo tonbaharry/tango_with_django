@@ -1,5 +1,4 @@
 import os
-import sys
 
 def populate():
     python_cat = add_cat('Python', views=128, likes=64)
