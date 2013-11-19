@@ -2,16 +2,21 @@
 
 # Import the OS module and work out our project's paths
 import os
-PROJECT_PATH = os.getcwd()
+SETTINGS_DIR = os.path.dirname(__file__)
+
+PROJECT_PATH = os.path.join(SETTINGS_DIR, os.pardir)
+PROJECT_PATH = os.path.abspath(PROJECT_PATH)
+
 TEMPLATE_PATH = os.path.join(PROJECT_PATH, 'templates')
 STATIC_PATH = os.path.join(PROJECT_PATH, 'static')
 DATABASE_PATH = os.path.join(PROJECT_PATH, 'rango.db')
 
 # Printing paths for sanity's sake
-print "Project root: ", PROJECT_PATH
-print "Templates: ", TEMPLATE_PATH
-print "Static: ", STATIC_PATH
-print "DB: ", DATABASE_PATH
+print "Settings directory:", SETTINGS_DIR
+print "Project root:", PROJECT_PATH
+print "Templates:", TEMPLATE_PATH
+print "Static:", STATIC_PATH
+print "DB:", DATABASE_PATH
 
 LOGIN_URL = '/rango/login/'
 
