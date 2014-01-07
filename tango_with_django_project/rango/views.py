@@ -175,8 +175,13 @@ def add_page(request, category_name_url):
             page = form.save(commit=False)
 
             # Retrieve the associated Category object so we can add it.
-            cat = Category.objects.get(name=category_name)
-            page.category = cat
+            try:
+                cat = Category.objects.get(name=category_name)
+                page.category = cat
+            except Category.DoesNotExist:
+                return render_to_response( 'rango/add_page.html',
+                                          context_dict,
+                                          context)
 
             # Also, create a default value for the number of views.
             page.views = 0
