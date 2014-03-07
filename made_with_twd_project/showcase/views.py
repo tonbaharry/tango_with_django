@@ -35,14 +35,14 @@ def index(request):
     # The context contains information such as the client's machine details, for example.
     context = RequestContext(request)
     demo_list = Demo.objects.order_by('year')[:10]
-    cat_list = Category.objects.all()
+    #cat_list = Category.objects.all()
 
     t = get_team(request.user)
     isteam = False
     if t:
         isteam = True
 
-    context_dict = {'demos': demo_list, 'cats': cat_list, 'isteam': isteam, 'team': t }
+    context_dict = {'demos': demo_list, 'isteam': isteam, 'team': t }
 
     return render_to_response('showcase/index.html', context_dict, context)
 
