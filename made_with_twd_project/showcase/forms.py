@@ -1,7 +1,7 @@
 __author__ = 'leif'
 from django.contrib.auth.models import User
 from django import forms
-from models import Team, Rating, Demo
+from models import Team, Rating, Demo, RATING_CHOICES
 
 
 class UserForm(forms.ModelForm):
@@ -28,6 +28,7 @@ class TeamForm(forms.ModelForm):
 
 class RatingForm(forms.ModelForm):
 
+    score = forms.ChoiceField(choices = RATING_CHOICES)
     class Meta:
         model = Rating
         exclude = ('rater','demo',)

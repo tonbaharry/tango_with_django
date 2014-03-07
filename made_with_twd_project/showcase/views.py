@@ -7,19 +7,15 @@ from forms import UserForm, TeamForm, RatingForm, DemoForm
 from models import Demo, Category, Team, Rating, Rater
 from django.contrib.auth.decorators import login_required
 
-def is_rater(userid):
-    flag = False
-    r = Rater.objects.filter(id=userid)
-    if len(r)==1:
-        flag = True
-    return flag
 
-def is_team(userid):
-    flag = False
-    t = Team.objects.filter(id=userid)
-    if len(t)==1:
-        flag = True
-    return flag
+def get_rater(user):
+    if user.is_anonymous():
+        return None
+    r = Rater.objects.filter(user=user)
+    if len(r) == 1:
+        return r[0]
+    else:
+        return None
 
 
 def get_team(user):
@@ -51,7 +47,7 @@ def index(request):
     return render_to_response('showcase/index.html', context_dict, context)
 
 
-def category(request, catid):
+def category_show(request, catid):
     context = RequestContext(request)
     demo_list = Demo.objects.filter(category=catid)
     cat_list = Category.objects.all()
@@ -59,13 +55,16 @@ def category(request, catid):
     return render_to_response('showcase/index.html', context_dict, context)
 
 
-def demo(request, demoid):
+def demo_show(request, demoid):
     context = RequestContext(request)
     #TODO(leifos): add in error handlding and checking, handle gracefully
     demo = Demo.objects.get(id=demoid)
     team = demo.team
     ratings = Rating.objects.filter(demo=demo)
-    can_rate = is_rater(request.user.id)
+    rater = get_rater(request.user)
+    can_rate = False
+    if rater:
+        can_rate = True
     context_dict = {'team': team, 'demo': demo, 'ratings':ratings, 'can_rate': can_rate }
 
     if can_rate:
@@ -79,15 +78,22 @@ def demo(request, demoid):
 @login_required
 def demo_rate(request, demoid):
     context = RequestContext(request)
-    if is_rater(request.user.id):
+    rater = get_rater(request.user)
+
+    if rater:
         if request.method == 'POST':
             rating_form = RatingForm(data=request.POST)
             if rating_form.is_valid():
                 rating = rating_form.save(commit=False)
-                rating.rater = request.user
-                rating.demo = Demo.objects.get(id=demoid)
+                rating.rater = rater
+                demo = Demo.objects.get(id=demoid)
+                rating.demo = demo
                 rating.save()
-                return demo(request, demoid)
+                demo.rating_count = demo.rating_count + 1
+                demo.rating_sum = demo.rating_sum + rating.score
+                demo.save()
+
+                return HttpResponseRedirect('/showcase/demo/show/'+str(demoid)+'/')
             else:
                 print rating_form.errors
         else:
@@ -97,8 +103,8 @@ def demo_rate(request, demoid):
             'showcase/demo.html',
             {'rating_form': rating_form},
             context)
-    else:
-        return render_to_response('showcase/demo.html', context)
+
+    return HttpResponseRedirect('/showcase/demo/show/'+str(demoid)+'/')
 
 
 @login_required
@@ -130,7 +136,7 @@ def demo_add(request):
 
 
 
-def team(request, teamid):
+def team_show(request, teamid):
     context = RequestContext(request)
     # what if the teamid is not valid or not an int
     #TODO(leifos): add in error handlding and checking, handle gracefully
@@ -145,8 +151,6 @@ def team(request, teamid):
     context_dict = {'team': team, 'demos': demo_list, 'myteam': my_team}
     print context_dict
     return render_to_response('showcase/team.html', context_dict, context)
-
-
 
 
 

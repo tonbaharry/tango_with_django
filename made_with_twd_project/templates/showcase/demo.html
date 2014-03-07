@@ -1,5 +1,7 @@
 {% extends 'showcase/base.html' %}
 
+
+
 {% block body_block %}
         <h1>Demo</h1>
 
@@ -13,7 +15,8 @@
              {{demo.tagline}}<br/>
              {{demo.description}} <br/>
              Created by: <a href="/showcase/team/{{team.id}}/">{{team.name}}</a><br/>
-             Category: <a href="/showcase/cats/{{demo.category.id}}/">{{ demo.category.name }}</a>
+             Category: <a href="/showcase/cats/{{demo.category.id}}/">{{ demo.category.name }}</a><br/>
+             Average Rating: {{demo.rating_average}}
        </div>
 
         <div>
@@ -21,7 +24,7 @@
             {% for r in ratings %}
             <div>
                 {{r.score}} - {{r.comment}}<br/>
-                by {{r.rator.user.username}}<br/>
+                by {{r.rater.user.username}}<br/>
             </div>
             {% endfor %}
         </div>
@@ -39,4 +42,8 @@
             </form>
         </div>
         {% endif %}
+
+
+
+
 {% endblock %}

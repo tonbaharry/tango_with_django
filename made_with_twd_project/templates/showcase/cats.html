@@ -1,0 +1,10 @@
+<h2>Category</h2>
+{% if cats %}
+   <ul >
+            {% for c in cats %}
+                <li class="warning"><a href="/showcase/cats/{{c.id}}/">{{ c.name }}</a></li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <strong >There are no category present.</strong>
+        {% endif %}

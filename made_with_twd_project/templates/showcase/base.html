@@ -1,5 +1,7 @@
 {% load static %}
 
+{% load showcase_extras %}
+
 <!DOCTYPE html>
 <html>
 
@@ -27,6 +29,10 @@
         </div>
 
         <div>
+
+        <div>
+            {% get_category_list %}
+        </div>
             {% block side_block %}{% endblock %}
         <div>
 

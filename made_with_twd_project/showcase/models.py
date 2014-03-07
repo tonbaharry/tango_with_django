@@ -31,7 +31,7 @@ YEAR_CHOICES = ( (2013,'2013'),(2014,'2014'),
 )
 
 RATING_CHOICES = ( (1,'1'),(2,'2'),
-    (3,'3'),('4','4'),('5','5')
+    (3,'3'),(4,'4'),(5,'5')
 )
 
 
@@ -65,7 +65,7 @@ class Rating(models.Model):
     rater = models.ForeignKey(Rater)
     demo = models.ForeignKey(Demo)
     comment = models.CharField(max_length=128)
-    score = models.IntegerField(default=0, choices=RATING_CHOICES)
+    score = models.IntegerField(default=1, choices=RATING_CHOICES)
 
     def __unicode__(self):
         return str(self.score) + ' ' + self.comment

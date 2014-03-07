@@ -5,9 +5,9 @@ from showcase import views
 
 urlpatterns = patterns('',
         url(r'^$', views.index, name='index'),
-        url(r'^cats/(?P<catid>\w+)/$', views.category, name='cat'),
-        url(r'^team/(?P<teamid>\w+)/$', views.team, name='team'),
-        url(r'^demo/show/(?P<demoid>\w+)/$', views.demo, name='demo'),
+        url(r'^cats/(?P<catid>\w+)/$', views.category_show, name='cat'),
+        url(r'^team/(?P<teamid>\w+)/$', views.team_show, name='team'),
+        url(r'^demo/show/(?P<demoid>\w+)/$', views.demo_show, name='demo'),
         url(r'^demo/rate/(?P<demoid>\w+)/$', views.demo_rate, name='rate_demo'),
         url(r'^demo/add/$', views.demo_add, name='add_demo'),
         url(r'^demo/$', views.index, name='index'),
