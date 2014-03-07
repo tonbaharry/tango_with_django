@@ -4,7 +4,7 @@
         <h1>Register Demo</h1>
 
         <div>
-             <form id="demo_form" method="post" action="/showcase/register/demo/"
+             <form id="demo_form" method="post" action="/showcase/demo/add/"
                 enctype="multipart/form-data">
 
                 {% csrf_token %}
@@ -14,5 +14,5 @@
                 <input type="submit" name="submit" value="Register Demo!" />
             </form>
         </div>
-        {% endif %}
+
 {% endblock %}

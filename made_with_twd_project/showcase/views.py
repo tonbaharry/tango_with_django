@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login, logout
-from forms import UserForm, TeamForm, RatingForm
+from forms import UserForm, TeamForm, RatingForm, DemoForm
 from models import Demo, Category, Team, Rating, Rater
 from django.contrib.auth.decorators import login_required
 
@@ -22,6 +22,17 @@ def is_team(userid):
     return flag
 
 
+def get_team(user):
+    if user.is_anonymous():
+        # or we could check if the user id is None
+        return None
+    t = Team.objects.filter(user=user)
+    if len(t)==1:
+        return t[0]
+    else:
+        return None
+
+
 
 def index(request):
     # Request the context of the request.
@@ -29,16 +40,13 @@ def index(request):
     context = RequestContext(request)
     demo_list = Demo.objects.order_by('year')[:10]
     cat_list = Category.objects.all()
-    isteam = is_team(request.user.id)
-    tid = 0
-    if isteam:
-        t = Team.objects.get(id=request.user.id)
-        tid = t.id
 
-    context_dict = {'demos': demo_list, 'cats':cat_list, 'isteam':isteam, 'teamid':tid }
+    t = get_team(request.user)
+    isteam = False
+    if t:
+        isteam = True
 
-
-
+    context_dict = {'demos': demo_list, 'cats': cat_list, 'isteam': isteam, 'team': t }
 
     return render_to_response('showcase/index.html', context_dict, context)
 
@@ -95,7 +103,30 @@ def demo_rate(request, demoid):
 
 @login_required
 def demo_add(request):
-    pass
+    context = RequestContext(request)
+    added = False
+    t = get_team(request.user)
+    if t:
+        if request.method == 'POST':
+            demo_form = DemoForm(data=request.POST)
+            if demo_form.is_valid():
+                demo = demo_form.save(commit=False)
+                demo.team = t
+                demo.save()
+                added = True
+                return HttpResponseRedirect('/showcase/team/'+str(t.id)+'/')
+            else:
+                print demo_form.errors
+        else:
+            demo_form = DemoForm()
+
+        # Render the template depending on the context.
+        return render_to_response(
+            'showcase/demo_add.html',
+            {'demo_form': demo_form, 'added': added},
+            context)
+    else:
+        return HttpResponse('You need to be a team to add a demo.')
 
 
 
@@ -107,9 +138,12 @@ def team(request, teamid):
     team = Team.objects.get(id=int(teamid))
     demo_list = Demo.objects.filter(team=team)
     my_team = False
-    if team.user == request.user:
-        my_team = True
+    t = get_team(request.user)
+    if t:
+        my_team = (t.id == int(teamid))
+
     context_dict = {'team': team, 'demos': demo_list, 'myteam': my_team}
+    print context_dict
     return render_to_response('showcase/team.html', context_dict, context)
 
 
