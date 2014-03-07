@@ -1,0 +1,35 @@
+{% extends 'showcase/base.html' %}
+
+{% block body_block %}
+        <h1>Team</h1>
+
+       <div>
+           {% if team.logo %}
+                <img src="/media/{{team.logo}}" />
+           {% endif %}
+
+            <h2>{{team.name}}</h2>
+           Team Members: {{team.members}}
+           {% if team.photo %}
+                Team Photo: <img src="/media/{{team.photo}}" />
+           {% endif %}
+       </div>
+
+        <div>
+            {% if demos %}
+            <ul>
+                {% for d in demos %}
+                <li><a href="/showcase/demo/show/{{d.id}}/">{{ d.name }}</a> {{d.tagline}}<br/>
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <strong>No demos submitted. </strong>
+        {% endif %}
+
+         {% if myteam %}
+            <a href="/showcase/demo/add/">Submit Demo</a>
+         {% endif %}
+        </div>
+
+{% endblock %}

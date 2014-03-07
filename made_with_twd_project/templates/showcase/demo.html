@@ -1,0 +1,42 @@
+{% extends 'showcase/base.html' %}
+
+{% block body_block %}
+        <h1>Demo</h1>
+
+         <div>
+             {% if demo.screenshot %}
+                <img src="{{demo.screenshot}}" alt="{{demo.name}}" />
+             {% endif %}
+
+             <a href="{{demo.url}}">{{ demo.name }}</a>
+             <br/>
+             {{demo.tagline}}<br/>
+             {{demo.description}} <br/>
+             Created by: <a href="/showcase/team/{{team.id}}/">{{team.name}}</a><br/>
+             Category: <a href="/showcase/cats/{{demo.category.id}}/">{{ demo.category.name }}</a>
+       </div>
+
+        <div>
+            <h2>Rating</h2>
+            {% for r in ratings %}
+            <div>
+                {{r.score}} - {{r.comment}}<br/>
+                by {{r.rator.user.username}}<br/>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if can_rate %}
+        <div>
+             <form id="user_form" method="post" action="/showcase/demo/rate/{{demo.id}}/"
+                enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                {{ rate_form.as_p }}
+
+                <input type="submit" name="submit" value="Rate it!" />
+            </form>
+        </div>
+        {% endif %}
+{% endblock %}

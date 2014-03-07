@@ -12,12 +12,18 @@ class Team(models.Model):
     user = models.OneToOneField(User)
     name = models.CharField(max_length=128)
     logo = models.ImageField(null=True, blank=True, upload_to=settings.UPLOAD_DIR)
-    photo = models.ImageField(null=True, blank=True, upload_to=settings.UPLOAD_DIR)
     members = models.CharField(max_length=512)
+    photo = models.ImageField(null=True, blank=True, upload_to=settings.UPLOAD_DIR)
 
     def __unicode__(self):
         return self.name
 
+class Rater(models.Model):
+    user = models.OneToOneField(User)
+    active = models.BooleanField(default=True)
+
+    def __unicode__(self):
+        return self.user.username
 
 
 YEAR_CHOICES = ( (2013,'2013'),(2014,'2014'),
@@ -37,7 +43,7 @@ class Demo(models.Model):
     url = models.URLField()
     live = models.BooleanField(default=False)
     github_url = models.URLField(null=True, blank=True)
-    screenshot= models.ImageField(null=True, blank=True, upload_to=settings.UPLOAD_DIR)
+    screenshot = models.ImageField(null=True, blank=True, upload_to=settings.UPLOAD_DIR)
     category = models.ForeignKey(Category)
     team = models.ForeignKey(Team)
     rating_count = models.IntegerField(default=0, blank=True)
@@ -49,14 +55,14 @@ class Demo(models.Model):
         else:
             return round(float(self.rating_sum)/float(self.rating_count),1)
 
-    average_rating = property(_get_average_rating)
+    rating_average = property(_get_average_rating)
 
     def __unicode__(self):
         return self.name
 
 
 class Rating(models.Model):
-    user = models.ForeignKey(User)
+    rater = models.ForeignKey(Rater)
     demo = models.ForeignKey(Demo)
     comment = models.CharField(max_length=128)
     score = models.IntegerField(default=0, choices=RATING_CHOICES)

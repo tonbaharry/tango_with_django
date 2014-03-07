@@ -1,18 +1,215 @@
 # Create your views here.
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from django.contrib.auth import authenticate, login, logout
+from forms import UserForm, TeamForm, RatingForm
+from models import Demo, Category, Team, Rating, Rater
+from django.contrib.auth.decorators import login_required
+
+def is_rater(userid):
+    flag = False
+    r = Rater.objects.filter(id=userid)
+    if len(r)==1:
+        flag = True
+    return flag
+
+def is_team(userid):
+    flag = False
+    t = Team.objects.filter(id=userid)
+    if len(t)==1:
+        flag = True
+    return flag
+
+
 
 def index(request):
     # Request the context of the request.
     # The context contains information such as the client's machine details, for example.
     context = RequestContext(request)
+    demo_list = Demo.objects.order_by('year')[:10]
+    cat_list = Category.objects.all()
+    isteam = is_team(request.user.id)
+    tid = 0
+    if isteam:
+        t = Team.objects.get(id=request.user.id)
+        tid = t.id
 
-    # Construct a dictionary to pass to the template engine as its context.
-    # Note the key boldmessage is the same as {{ boldmessage }} in the template!
-    context_dict = {'boldmessage': "I am bold font from the context"}
+    context_dict = {'demos': demo_list, 'cats':cat_list, 'isteam':isteam, 'teamid':tid }
 
-    # Return a rendered response to send to the client.
-    # We make use of the shortcut function to make our lives easier.
-    # Note that the first parameter is the template we wish to use.
+
+
+
     return render_to_response('showcase/index.html', context_dict, context)
+
+
+def category(request, catid):
+    context = RequestContext(request)
+    demo_list = Demo.objects.filter(category=catid)
+    cat_list = Category.objects.all()
+    context_dict = {'demos': demo_list, 'cats':cat_list}
+    return render_to_response('showcase/index.html', context_dict, context)
+
+
+def demo(request, demoid):
+    context = RequestContext(request)
+    #TODO(leifos): add in error handlding and checking, handle gracefully
+    demo = Demo.objects.get(id=demoid)
+    team = demo.team
+    ratings = Rating.objects.filter(demo=demo)
+    can_rate = is_rater(request.user.id)
+    context_dict = {'team': team, 'demo': demo, 'ratings':ratings, 'can_rate': can_rate }
+
+    if can_rate:
+        rate_form = RatingForm()
+        context_dict['rate_form'] = rate_form
+
+
+    return render_to_response('showcase/demo.html', context_dict, context)
+
+
+@login_required
+def demo_rate(request, demoid):
+    context = RequestContext(request)
+    if is_rater(request.user.id):
+        if request.method == 'POST':
+            rating_form = RatingForm(data=request.POST)
+            if rating_form.is_valid():
+                rating = rating_form.save(commit=False)
+                rating.rater = request.user
+                rating.demo = Demo.objects.get(id=demoid)
+                rating.save()
+                return demo(request, demoid)
+            else:
+                print rating_form.errors
+        else:
+            rating_form = RatingForm()
+
+            return render_to_response(
+            'showcase/demo.html',
+            {'rating_form': rating_form},
+            context)
+    else:
+        return render_to_response('showcase/demo.html', context)
+
+
+@login_required
+def demo_add(request):
+    pass
+
+
+
+def team(request, teamid):
+    context = RequestContext(request)
+    # what if the teamid is not valid or not an int
+    #TODO(leifos): add in error handlding and checking, handle gracefully
+
+    team = Team.objects.get(id=int(teamid))
+    demo_list = Demo.objects.filter(team=team)
+    my_team = False
+    if team.user == request.user:
+        my_team = True
+    context_dict = {'team': team, 'demos': demo_list, 'myteam': my_team}
+    return render_to_response('showcase/team.html', context_dict, context)
+
+
+
+
+
+def register(request):
+    context = RequestContext(request)
+    #team = Team.objects.get(id=int(teamid))
+    #demo_list = Demo.objects.filter(team=team)
+    #context_dict = {'team': team, 'demos': demo_list}
+    context_dict = {}
+    return render_to_response('showcase/register.html', context_dict, context)
+
+
+def register_rater(request):
+    context = RequestContext(request)
+    registered = False
+    if request.method == 'POST':
+        user_form = UserForm(data=request.POST)
+        if user_form.is_valid():
+            user = user_form.save()
+            user.set_password(user.password)
+            user.save()
+            r = Rater(user=user, active=True)
+            r.save()
+            registered = True
+
+        else:
+            print user_form.errors
+    else:
+        user_form = UserForm()
+
+    # Render the template depending on the context.
+    return render_to_response(
+            'showcase/rater_registration.html',
+            {'user_form': user_form, 'registered': registered},
+            context)
+
+
+
+def register_team(request):
+    context = RequestContext(request)
+    registered = False
+    if request.method == 'POST':
+        user_form = UserForm(data=request.POST)
+        team_form = TeamForm(request.POST, request.FILES )
+        if user_form.is_valid():
+            if team_form.is_valid():
+                user = user_form.save()
+                # do i need these two lines anymore? Django 1.5, i think, handles this automatically now.
+                user.set_password(user.password)
+                user.save()
+                t = team_form.save(commit=False)
+                t.user = user
+                t.save()
+                registered = True
+                user = authenticate(username=user.username, password=user.password)
+                return team(request, t.id)
+        else:
+            print user_form.errors, team_form.errors
+    else:
+        user_form = UserForm()
+        team_form = TeamForm()
+
+    # Render the template depending on the context.
+    return render_to_response(
+            'showcase/team_registration.html',
+            {'user_form': user_form, 'team_form':team_form, 'registered': registered},
+            context)
+
+
+
+
+
+
+def user_login(request):
+    context = RequestContext(request)
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return HttpResponseRedirect('/showcase/')
+            else:
+                return HttpResponse("Your ShowCase account is disabled.")
+        else:
+            print "Invalid login details: {0}, {1}".format(username, password)
+            return HttpResponse("Invalid login details supplied.")
+
+    else:
+        return render_to_response('showcase/login.html', {}, context)
+
+
+
+# Use the login_required() decorator to ensure only those logged in can access the view.
+@login_required
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect('/showcase/')

@@ -4,9 +4,9 @@ def populate():
     itech= add_cat('iTECH')
     dim = add_cat('DIM3')
 
-    milad = add_rator('milad','test','Milad','Jones','milad@jones.com')
-    fergus = add_rator('fergus','test','Fergus','Smyth','fergus@smyth.com')
-    doug = add_rator('doug','test','Doug','McTaggert','doug@taggert.com')
+    milad = add_rater('milad','test','Milad','Jones','milad@jones.com')
+    fergus = add_rater('fergus','test','Fergus','Smyth','fergus@smyth.com')
+    doug = add_rater('doug','test','Doug','McTaggert','doug@taggert.com')
 
     ateam = add_team('alpha','test','Adam','Smith','', 'AlphaNoobs','Adam, Bob, Charlie')
     bteam = add_team('beta','test','Danny','DeVito', '','BetaMaxs','Danny, Eddy, Freddy')
@@ -29,16 +29,23 @@ def add_cat(name):
     return c
 
 
-def add_rator(un, pw, fname, sname, email):
+def add_user(un, pw, fname, sname, email):
     u = User.objects.get_or_create(username=un, first_name=fname, last_name=sname, email=email)[0]
     u.set_password(pw)
     u.save()
+
     return u
+
+def add_rater(un, pw, fname, sname, email):
+
+    u = add_user(un, pw, fname, sname, email)
+    r = Rater.objects.get_or_create(user=u, active=True)[0]
+    return r
 
 def add_team(un, pw, fname, sname, email, team_name, members):
 
     #frist create user in user db
-    u = add_rator(un, pw, fname, sname, email)
+    u = add_user(un, pw, fname, sname, email)
     # then create team with ref to user
     t = Team.objects.get_or_create(user=u, name=team_name, members=members)[0]
     return t
@@ -47,8 +54,8 @@ def add_demo(team, cat, name, tagline, description, year, url):
     d = Demo.objects.get_or_create(team=team, category=cat, name=name, tagline=tagline, description=description, year=year, url=url,live=True)[0]
     return d
 
-def add_rating(user, demo, comment, score):
-    r = Rating.objects.get_or_create(user=user, demo=demo, comment=comment, score=score)
+def add_rating(rater, demo, comment, score):
+    r = Rating.objects.get_or_create(rater=rater, demo=demo, comment=comment, score=score)
     demo.rating_count = demo.rating_count + 1
     demo.rating_sum = demo.rating_sum + score
     demo.save()
@@ -58,6 +65,6 @@ def add_rating(user, demo, comment, score):
 if __name__ == '__main__':
     print "Starting ShowCase population script..."
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'made_with_twd_project.settings')
-    from showcase.models import Category, Team, Rating, Demo
+    from showcase.models import Category, Team, Rating, Demo, Rater
     from django.contrib.auth.models import User
     populate()

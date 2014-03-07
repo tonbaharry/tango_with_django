@@ -18,6 +18,8 @@ print "DB:", DATABASE_PATH
 
 
 
+LOGIN_URL = '/showcase/login/'
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
