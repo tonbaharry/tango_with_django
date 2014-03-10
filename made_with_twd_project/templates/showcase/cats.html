@@ -1,6 +1,6 @@
-<h2>Category</h2>
+<h4>Category</h4>
 {% if cats %}
-   <ul >
+   <ul class="side-nav">
             {% for c in cats %}
                 <li class="warning"><a href="/showcase/cats/{{c.id}}/">{{ c.name }}</a></li>
             {% endfor %}

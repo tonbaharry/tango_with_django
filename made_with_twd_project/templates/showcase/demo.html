@@ -3,44 +3,73 @@
 
 
 {% block body_block %}
-        <h1>Demo</h1>
+    <div class="row">
+        <div class="callout panel">
+            <div class="row">
+                <div class="large-8 columns">
+                     <h1><a href="{{demo.url}}">{{ demo.name }}</a></h1>
+                     <h3>{{demo.tagline}}</h3>
+                     <h5>Created by: <a href="/showcase/team/{{team.id}}/">{{team.name}}</a></h5>
+                     <h6>Average Rating: {{demo.rating_average}}</h6>
+                     <h6>Category: <a href="/showcase/cats/{{demo.category.id}}/">{{ demo.category.name }}</a></h6>
 
-         <div>
-             {% if demo.screenshot %}
-                <img src="{{demo.screenshot}}" alt="{{demo.name}}" />
-             {% endif %}
-
-             <a href="{{demo.url}}">{{ demo.name }}</a>
-             <br/>
-             {{demo.tagline}}<br/>
-             {{demo.description}} <br/>
-             Created by: <a href="/showcase/team/{{team.id}}/">{{team.name}}</a><br/>
-             Category: <a href="/showcase/cats/{{demo.category.id}}/">{{ demo.category.name }}</a><br/>
-             Average Rating: {{demo.rating_average}}
-       </div>
-
-        <div>
-            <h2>Rating</h2>
-            {% for r in ratings %}
-            <div>
-                {{r.score}} - {{r.comment}}<br/>
-                by {{r.rater.user.username}}<br/>
+                </div>
+                <div class="large-4 columns">
+                    {% if demo.screenshot %}
+                    <a class="th" href="{{demo.url}}">
+                        <img src="media/{{demo.screenshot}}" alt="{{demo.name}}" />
+                        </a>
+                    {% endif %}
+                </div>
             </div>
-            {% endfor %}
+            <div class="row">
+                <div class="large-12 columns">
+                    {{demo.description}} <br/>
+                </div>
+            </div>
         </div>
+    </div>
+    <div class="row">
+        <div class="large-12 columns">
+            <div class="panel">
+                <h4>Comments</h4>
 
-        {% if can_rate %}
-        <div>
-             <form id="user_form" method="post" action="/showcase/demo/rate/{{demo.id}}/"
-                enctype="multipart/form-data">
+                {% for r in ratings %}
+                <div class="row">
+                    <div class ="large-1 columns">
+                    {% if r.score > 2 %}
+                    <span class="label success round">{{r.score}}</span>
+                    {% else %}
+                    <span class="label alert round">{{r.score}}</span>
+                    {% endif %}
+                        </div>
+                    <div class ="large-11 columns">
 
-                {% csrf_token %}
-
-                {{ rate_form.as_p }}
-
-                <input type="submit" name="submit" value="Rate it!" />
-            </form>
+                    <h5>{{r.comment}}  by {{r.rater.user.username}}</h5>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
         </div>
+    </div>
+
+    {% if can_rate %}
+    <div class="row">
+        <div class="large-12 columns">
+             <div class="panel">
+                <h4>Rate</h4>
+                    <form id="user_form" method="post" action="/showcase/demo/rate/{{demo.id}}/"
+                        enctype="multipart/form-data">
+
+                    {% csrf_token %}
+
+                    {{ rate_form.as_p }}
+
+                    <input class="button" type="submit" name="submit" value="Rate it!" />
+                </form>
+            </div>
+        </div>
+    </div>
         {% endif %}
 
 

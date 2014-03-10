@@ -1,45 +1,85 @@
 {% load static %}
-
 {% load showcase_extras %}
 
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Showcase</title>
+    <link rel="stylesheet" href="{% static 'css/foundation.css' %}" />
+    <script src="{% static 'js/vendor/modernizr.js' %}"></script>
+  </head>
+  <body>
 
-    <head>
-        <title>Showcase</title>
-    </head>
+  <nav class="top-bar" data-topbar>
+    <ul class="title-area">
+        <li class="name">
+            <h1><a href="/showcase/">Showcase</a></h1>
+        </li>
+        <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
+  </ul>
 
-    <body>
-        <div>
-            <h1><a href="/showcase/">ShowCase</a></h1>
-            {% if user.is_authenticated %}
-                Hello {{ user.username }}! |
-                {% if isteam %}
-                    <a href="/showcase/team/{{team.id}}/">Profile</a> |
-                {% endif %}
+  <section class="top-bar-section">
+    <!-- Right Nav Section -->
+    <ul class="right">
 
-            <a href="/showcase/logout/">Sign Out</a>
-            {% else %}
-                <a href="/showcase/login/">Login</a> | <a href="/showcase/register/">Register</a>
-            {% endif %}
-        </div>
+        {% if user.is_authenticated %}
+                    <li><a href="">Hello {{ user.username }}!</a> </li>
+                    {% if isteam %}
+                        <li><a href="/showcase/team/{{team.id}}/">Profile</a> </li>
+                    {% endif %}
 
-        <div>
-            {% block body_block %}{% endblock %}
-        </div>
+                    <li><a href="/showcase/logout/">Sign Out</a></li>
+                    {% else %}
+                        <li><a href="/showcase/login/">Login</a></li>
+                        <li><a href="/showcase/register/">Register</a></li>
+                    {% endif %}
 
-        <div>
 
-        <div>
-            {% get_category_list %}
-        </div>
-            {% block side_block %}{% endblock %}
-        <div>
+    </ul>
 
-        <div>
-            {% block footer_block %}{% endblock %}
-        <div>
+    <!-- Left Nav Section
+    <ul class="left">
+      <li><a href="#">Left Nav Button</a></li>
+    </ul>
+    -->
+  </section>
+</nav>
 
-    </body>
 
+
+    <!--
+    <div class="row">
+      <div class="large-12 columns">
+        <h1></h1>
+      </div>
+    </div>
+    -->
+
+
+    <div class="row">
+       <div class="large-3 medium-3 columns">
+				<div class="sidebar panel">
+        	 {% get_category_list %}
+        	           </div>
+      </div>
+
+
+      <div class="large-9 medium-9 columns">
+
+         {% block body_block %}
+            {% endblock %}
+
+       </div>
+
+
+    </div>
+    
+    <script src="{% static 'js/vendor/jquery.js' %}"></script>
+    <script src="{% static 'js/foundation.min.js' %}"></script>
+    <script>
+      $(document).foundation();
+    </script>
+  </body>
 </html>
