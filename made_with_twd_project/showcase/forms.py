@@ -27,8 +27,8 @@ class TeamForm(forms.ModelForm):
 
 
 class RatingForm(forms.ModelForm):
-
-    score = forms.ChoiceField(choices = RATING_CHOICES)
+    comment = forms.CharField(label='What do you think of this app?', widget=forms.Textarea)
+    score = forms.ChoiceField(label='How do you rate this app?', choices = RATING_CHOICES)
     class Meta:
         model = Rating
         exclude = ('rater','demo',)

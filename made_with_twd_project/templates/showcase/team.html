@@ -1,35 +1,41 @@
 {% extends 'showcase/base.html' %}
 
 {% block body_block %}
-        <h1>Team</h1>
+        <div>
 
-       <div>
-           {% if team.logo %}
-                <img src="/media/{{team.logo}}" />
-           {% endif %}
 
-            <h2>{{team.name}}</h2>
-           Team Members: {{team.members}}
-           {% if team.photo %}
-                Team Photo: <img src="/media/{{team.photo}}" />
-           {% endif %}
+            <div>
+                {% if team.logo %}
+                    <img width="64" height="64" src="/media/{{team.logo}}" />
+                {% else %}
+                    <img width="64" height="64" src="http://placehold.it/64x64" />
+                {% endif %}
+
+                <h1>{{team.name}}</h1>
+
+                Team Members: {{team.members}}
+                {% if team.photo %}
+                    Team Photo: <img src="/media/{{team.photo}}" />
+                {% endif %}
+            </div>
+
        </div>
 
         <div>
-            {% if demos %}
-            <ul>
-                {% for d in demos %}
-                <li><a href="/showcase/demo/show/{{d.id}}/">{{ d.name }}</a> {{d.tagline}}<br/>
-                </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <strong>No demos submitted. </strong>
-        {% endif %}
+            <div>
+                {% if demos %}
+                <ul>
+                    {% for d in demos %}
+                    <li><a href="/showcase/demo/show/{{d.id}}/">{{ d.name }}</a> {{d.tagline}} </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                    <strong>No demos submitted. </strong>
+                {% endif %}
 
          {% if myteam %}
-            <a href="/showcase/demo/add/">Submit Demo</a>
+            <a class="button" href="/showcase/demo/add/">Submit Demo</a>
          {% endif %}
         </div>
-
+</div>
 {% endblock %}

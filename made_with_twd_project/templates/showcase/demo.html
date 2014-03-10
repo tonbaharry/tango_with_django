@@ -1,7 +1,6 @@
 {% extends 'showcase/base.html' %}
 
 
-
 {% block body_block %}
     <div class="row">
         <div class="callout panel">
@@ -30,7 +29,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="large-12 columns">
+
             <div class="panel">
                 <h4>Comments</h4>
 
@@ -50,25 +49,37 @@
                 </div>
                 {% endfor %}
             </div>
-        </div>
+
     </div>
 
     {% if can_rate %}
     <div class="row">
-        <div class="large-12 columns">
+
              <div class="panel">
                 <h4>Rate</h4>
                     <form id="user_form" method="post" action="/showcase/demo/rate/{{demo.id}}/"
                         enctype="multipart/form-data">
 
                     {% csrf_token %}
+                    <div class="row">
 
-                    {{ rate_form.as_p }}
+                        <div class="large-12 columns">
+                            <label>Please enter your comments about the application</label>
+                                {{rate_form.comment.errors}}
+                                {{rate_form.comment}}
+                            <label>Please score this application</label>
+                        </div>
+                    </div>
 
+                    <div class="row">
+                        <div class="large-2 columns">
+                            {{rate_form.score.errors}}
+                            {{rate_form.score}}
+                        </div>
+                    </div>
                     <input class="button" type="submit" name="submit" value="Rate it!" />
                 </form>
             </div>
-        </div>
     </div>
         {% endif %}
 
