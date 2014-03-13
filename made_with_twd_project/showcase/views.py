@@ -209,8 +209,9 @@ def team_show(request, teamid):
 
     team = Team.objects.get(id=teamid)
     myteam = False
-    if currteam.id == team.id:
-        myteam = True
+    if currteam:
+        if currteam.id == team.id:
+            myteam = True
 
     demo_list = Demo.objects.filter(team=team)
 
