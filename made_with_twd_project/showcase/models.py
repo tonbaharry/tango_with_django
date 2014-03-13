@@ -41,7 +41,7 @@ class Demo(models.Model):
     description = models.CharField(max_length=512)
     year = models.IntegerField(default=2014, choices=YEAR_CHOICES)
     url = models.URLField()
-    live = models.BooleanField(default=False)
+    live = models.BooleanField(default=True)
     github_url = models.URLField(null=True, blank=True)
     screenshot = models.ImageField(null=True, blank=True, upload_to=settings.UPLOAD_DIR)
     category = models.ForeignKey(Category)

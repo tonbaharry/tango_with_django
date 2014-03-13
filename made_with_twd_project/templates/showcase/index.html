@@ -1,37 +1,38 @@
 {% extends 'showcase/base.html' %}
 
 {% block body_block %}
-    <div>
-        <h2>Demos</h2>
-        {% if demos %}
-            <ul>
-            {% for d in demos %}
-                <li><a href="/showcase/demo/show/{{d.id}}/">{{ d.name }}</a> {{d.tagline}}<br/>
-                Created by: {{d.team.name}}
-                </li>
-            {% endfor %}
-            </ul>
-        {% else %}
-            <strong>There are no demos present.</strong>
-        {% endif %}
+    <div class="row">
+        <div class="callout panel">
+            <div class="row">
+                <div class="large-8 columns">
+                <h2>{% if cat %} {{cat.name}} {% endif %} Demos</h2>
+                 {% if demos %}
+                    {% for d in demos %}
+                        <div>
+                        {% if demo.screenshot %}
+                            <a class="th" href="{{demo.url}}">
+                            <img src="media/{{demo.screenshot}}" alt="{{demo.name}}" />
+                            </a>
+                        {% endif %}
+
+                        <a href="/showcase/demo/show/{{d.id}}/">{{ d.name }}</a> {{d.tagline}}<br/>
+                        Created by: <a href="/showcase/team/{{d.team.id}}/">{{d.team.name}}</a>
+                        {% if d.rating_average > 2 %}
+                            <span class="label success round">{{d.rating_average}}</span>
+                        {% else %}
+                            <span class="label alert round">{{d.rating_average}}</span>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <strong>There are no demos present.</strong>
+                {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
-
 {% endblock %}
 
-{% block side_block %}
-    <!--- div>
-        <h2 style="color: mediumvioletred">Category</h2>
-        {% if cats %}
-            <ul >
-            {% for c in cats %}
-                <li class="warning"><a href="/showcase/cats/{{c.id}}/">{{ c.name }}</a></li>
-            {% endfor %}
-            </ul>
-        {% else %}
-            <strong >There are no category present.</strong>
-        {% endif %}
 
-    </div> -->
-{% endblock %}
 
 

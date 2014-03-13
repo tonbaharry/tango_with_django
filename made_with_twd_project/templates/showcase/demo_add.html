@@ -1,17 +1,18 @@
 {% extends 'showcase/base.html' %}
 
 {% block body_block %}
-        <h1>Register Demo</h1>
+        <h2>{% if edit %}Update{% else %}Register{% endif %} Demo</h2>
 
         <div>
-             <form id="demo_form" method="post" action="/showcase/demo/add/"
+             <form id="demo_form" method="post" action="/showcase/demo/edit/{% if demoid %}{{demoid}}/{% endif %}"
                 enctype="multipart/form-data">
 
                 {% csrf_token %}
 
                 {{ demo_form.as_p }}
 
-                <input type="submit" name="submit" value="Register Demo!" />
+                 <input class="button" type="submit" name="submit" value="{% if edit %}Update{% else %} Add{%endif %} Demo" />
+
             </form>
         </div>
 

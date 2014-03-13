@@ -15,7 +15,7 @@
   <nav class="top-bar" data-topbar>
     <ul class="title-area">
         <li class="name">
-            <h1><a href="/showcase/">Showcase</a></h1>
+            <h1><a href="/showcase/">Made with Tango With Django</a></h1>
         </li>
         <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
   </ul>
@@ -27,7 +27,7 @@
         {% if user.is_authenticated %}
                     <li><a href="">Hello {{ user.username }}!</a> </li>
                     {% if isteam %}
-                        <li><a href="/showcase/team/{{team.id}}/">Profile</a> </li>
+                        <li><a href="/showcase/team/{{currteam.id}}/">Profile</a> </li>
                     {% endif %}
 
                     <li><a href="/showcase/logout/">Sign Out</a></li>
@@ -61,8 +61,8 @@
     <div class="row">
        <div class="large-3 medium-3 columns">
 				<div class="sidebar panel">
-        	 {% get_category_list %}
-        	           </div>
+        	        {% get_category_list catid %}
+        	 </div>
       </div>
 
 
@@ -72,10 +72,8 @@
             {% endblock %}
 
        </div>
-
-
     </div>
-    
+
     <script src="{% static 'js/vendor/jquery.js' %}"></script>
     <script src="{% static 'js/foundation.min.js' %}"></script>
     <script>

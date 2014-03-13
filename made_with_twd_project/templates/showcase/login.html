@@ -1,25 +1,36 @@
 {% extends 'showcase/base.html' %}
 
 {% block body_block %}
-        <h1>Login</h1>
+        <div class="row">
+        <div class="callout panel">
+            <div class="row">
+                <div class="large-8 columns">
+        <h2>Login</h2>
 
-        <form id="login_form" method="post" action="/showcase/login/">
+            <form id="login_form" method="post" action="/showcase/login/">
             {% csrf_token %}
             <div class="row">
-                <div class="large-4 columns">
+                <div class="large-6 columns">
                 <label>Username
                     <input type="text" name="username" value="" size="50" />
                 </label>
                 </div>
             </div>
             <div class="row">
-                <div class="large-4 columns">
+                <div class="large-6 columns">
                 <label> Password
                     <input type="password" name="password" value="" size="50" />
                 </label>
                 </div>
             </div>
 
-            <input class="button" type="submit" value="submit" />
-        </form>
+            <input class="button tiny" type="submit" value="Login" />
+            </form>
+
+        </div>
+        </div>
+
+        </div>
+        </div>
+
 {% endblock %}

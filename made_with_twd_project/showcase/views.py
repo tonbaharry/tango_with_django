@@ -1,7 +1,7 @@
 # Create your views here.
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from forms import UserForm, TeamForm, RatingForm, DemoForm
 from models import Demo, Category, Team, Rating, Rater
@@ -29,21 +29,22 @@ def get_team(user):
         return None
 
 
+def add_isteam_to_context_dict(context_dict, team):
+    if team:
+        context_dict['isteam'] = True
+        context_dict['currteam'] = team
+    else:
+        context_dict['isteam'] = False
+        context_dict['currteam'] = None
 
 def index(request):
     # Request the context of the request.
     # The context contains information such as the client's machine details, for example.
     context = RequestContext(request)
-    demo_list = Demo.objects.order_by('year')[:10]
-    #cat_list = Category.objects.all()
-
+    demo_list = sorted(Demo.objects.all(), key = lambda d: d.rating_average, reverse=True)[:10]
+    context_dict = { 'demos': demo_list }
     t = get_team(request.user)
-    isteam = False
-    if t:
-        isteam = True
-
-    context_dict = {'demos': demo_list, 'isteam': isteam, 'team': t }
-
+    add_isteam_to_context_dict(context_dict, t)
     return render_to_response('showcase/index.html', context_dict, context)
 
 
@@ -51,7 +52,11 @@ def category_show(request, catid):
     context = RequestContext(request)
     demo_list = Demo.objects.filter(category=catid)
     cat_list = Category.objects.all()
-    context_dict = {'demos': demo_list, 'cats':cat_list}
+    cat = Category.objects.get(id=catid)
+    context_dict = {'demos': demo_list, 'cats':cat_list, 'catid': catid, 'cat':cat}
+    t = get_team(request.user)
+    add_isteam_to_context_dict(context_dict, t)
+
     return render_to_response('showcase/index.html', context_dict, context)
 
 
@@ -66,6 +71,8 @@ def demo_show(request, demoid):
     if rater:
         can_rate = True
     context_dict = {'team': team, 'demo': demo, 'ratings':ratings, 'can_rate': can_rate }
+    t = get_team(request.user)
+    add_isteam_to_context_dict(context_dict, t)
 
     if can_rate:
         rate_form = RatingForm()
@@ -78,15 +85,29 @@ def demo_show(request, demoid):
 @login_required
 def demo_rate(request, demoid):
     context = RequestContext(request)
+    context_dict ={}
+    t = get_team(request.user)
+    add_isteam_to_context_dict(context_dict, t)
+
     rater = get_rater(request.user)
 
     if rater:
         if request.method == 'POST':
             rating_form = RatingForm(data=request.POST)
             if rating_form.is_valid():
+                demo = Demo.objects.get(id=demoid)
+
+                # check if the rater has already rated this app, if so, remove this entry and replace with new rating
+                rating_check = Rating.objects.filter(rater=rater,demo=demo).count()
+                if rating_check == 1:
+                    past_rating = Rating.objects.get(rater=rater,demo=demo)
+                    demo.rating_count = demo.rating_count - 1
+                    demo.rating_sum = demo.rating_sum - past_rating.score
+                    past_rating.delete()
+                    demo.save()
+
                 rating = rating_form.save(commit=False)
                 rating.rater = rater
-                demo = Demo.objects.get(id=demoid)
                 rating.demo = demo
                 rating.save()
                 demo.rating_count = demo.rating_count + 1
@@ -99,9 +120,10 @@ def demo_rate(request, demoid):
         else:
             rating_form = RatingForm()
 
+            context_dict['rating_form']=rating_form
             return render_to_response(
             'showcase/demo.html',
-            {'rating_form': rating_form},
+            context_dict,
             context)
 
     return HttpResponseRedirect('/showcase/demo/show/'+str(demoid)+'/')
@@ -110,6 +132,10 @@ def demo_rate(request, demoid):
 @login_required
 def demo_add(request):
     context = RequestContext(request)
+    context_dict ={}
+    t = get_team(request.user)
+    add_isteam_to_context_dict(context_dict, t)
+
     added = False
     t = get_team(request.user)
     if t:
@@ -127,28 +153,69 @@ def demo_add(request):
             demo_form = DemoForm()
 
         # Render the template depending on the context.
+        context_dict['demo_form'] = demo_form
+        context_dict['added'] = added
         return render_to_response(
             'showcase/demo_add.html',
-            {'demo_form': demo_form, 'added': added},
-            context)
+                context_dict, context)
     else:
         return HttpResponse('You need to be a team to add a demo.')
+
+@login_required
+def demo_edit(request, demoid=None):
+    """
+    Thanks to: http://wiki.ddenis.com/index.php?title=Django,_add_and_edit_object_together_in_the_same_form
+    """
+    context = RequestContext(request)
+    t = get_team(request.user)
+    context_dict ={}
+    add_isteam_to_context_dict(context_dict, t)
+
+    edit = False
+    if t:
+        if demoid:
+            demo = get_object_or_404(Demo, pk=demoid)
+            edit = True
+            print demo, demo.id, demo.url
+            if demo.team.user != request.user:
+                return HttpResponseForbidden()
+        else:
+            demo = Demo(team=t)
+        #Could use this instead -> if request.POST:
+        if request.method == 'POST':
+            demo_form = DemoForm(data=request.POST, instance=demo)
+            if demo_form.is_valid():
+                demo_form.save()
+                return HttpResponseRedirect('/showcase/team/'+str(t.id)+'/')
+            else:
+                print demo_form.errors
+        else:
+            demo_form = DemoForm(instance=demo)
+
+        # Render the template depending on the context.
+        return render_to_response(
+            'showcase/demo_add.html',
+            {'demo_form': demo_form, 'demoid':demoid,'edit':edit},
+            context)
+    else:
+        return HttpResponse('You need to be a team to add or edit a demo.')
 
 
 
 def team_show(request, teamid):
     context = RequestContext(request)
-    # what if the teamid is not valid or not an int
-    #TODO(leifos): add in error handlding and checking, handle gracefully
+    context_dict = {}
+    currteam = get_team(request.user)
 
-    team = Team.objects.get(id=int(teamid))
+    team = Team.objects.get(id=teamid)
+    myteam = False
+    if currteam.id == team.id:
+        myteam = True
+
     demo_list = Demo.objects.filter(team=team)
-    my_team = False
-    t = get_team(request.user)
-    if t:
-        my_team = (t.id == int(teamid))
 
-    context_dict = {'team': team, 'demos': demo_list, 'myteam': my_team}
+    context_dict = {'team': team, 'demos': demo_list, 'myteam': myteam}
+    add_isteam_to_context_dict(context_dict, currteam)
     print context_dict
     return render_to_response('showcase/team.html', context_dict, context)
 
@@ -218,10 +285,6 @@ def register_team(request):
             'showcase/team_registration.html',
             {'user_form': user_form, 'team_form':team_form, 'registered': registered},
             context)
-
-
-
-
 
 
 def user_login(request):

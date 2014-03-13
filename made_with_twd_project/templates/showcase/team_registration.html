@@ -1,26 +1,38 @@
 {% extends 'showcase/base.html' %}
 
 {% block body_block %}
-        <h1>Team Register</h1>
+            <div class="row">
+        <div class="callout panel">
+            <div class="row">
+                <div class="large-8 columns">
+        <h2>Team Registration Form</h2>
 
         {% if registered %}
             <strong>Thank you for registering!</strong>
             <a href="/showcase/">Return to the homepage.</a><br />
         {% else %}
-            <strong>Register here!</strong><br />
+            <p><strong>Please enter the following details to register your team.</strong><br />
+                    </p>
 
             <form id="user_form" method="post" action="/showcase/register/team/"
                 enctype="multipart/form-data">
 
                 {% csrf_token %}
 
-                <b>Login Details</b>
-                {{ user_form.as_p }}
 
+                <b>Login Details</b>
+                <div>
+                {{ user_form.as_p }}
+                </div>
+                <div>
                 <b>Team Details</b>
                 {{ team_form.as_p }}
-
-                <input type="submit" name="submit" value="Register" />
+                </div>
+                <input class="button tiny" type="submit" name="submit" value="Register" />
             </form>
         {% endif %}
+                    </div>
+                </div>
+            </div>
+
 {% endblock %}

@@ -2,7 +2,9 @@ import os
 
 def populate():
     itech= add_cat('iTECH')
-    dim = add_cat('DIM3')
+    dim1 = add_cat('DIM3-GLA')
+    dim2  = add_cat('DIM3-SIT')
+    other = add_cat('Other')
 
     milad = add_rater('milad','test','Milad','Jones','milad@jones.com')
     fergus = add_rater('fergus','test','Fergus','Smyth','fergus@smyth.com')
@@ -12,9 +14,9 @@ def populate():
     bteam = add_team('beta','test','Danny','DeVito', '','BetaMaxs','Danny, Eddy, Freddy')
     gteam = add_team('gamma','test','Geri','Halliway', '','GammaPros','Geri, Heido, Ingrid')
 
-    pf  = add_demo(ateam, dim, 'PageFetch','Test your web searching skills', 'A game designed to test and improve your web searching abilities.',2014, 'http://pagefetch.pythonanywhere.com')
-    asg = add_demo(bteam, dim, 'ASG','Test your search skills', 'A game designed to test your searching abilities.',2014, 'http://www.iretrieve.info')
-    rm  = add_demo(gteam, itech, 'RetrieveMe','Test your site searching skills', 'A game designed to test how good you are at finding information on Glasgow Unis website',2014, 'http://www.retrieveme.info')
+    pf  = add_demo(ateam, other, 'PageFetch','Test your web searching skills', 'A game designed to test and improve your web searching abilities.',2014, 'http://pagefetch.pythonanywhere.com')
+    asg = add_demo(bteam, other, 'ASG','Test your search skills', 'A game designed to test your searching abilities.',2014, 'http://www.iretrieve.info')
+    rm  = add_demo(gteam, other, 'RetrieveMe','Test your site searching skills', 'A game designed to test how good you are at finding information on Glasgow Unis website',2014, 'http://www.retrieveme.info')
 
 
     add_rating(milad, pf, 'It was really good!', 4)

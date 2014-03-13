@@ -16,7 +16,7 @@ class UserForm(forms.ModelForm):
 
 class TeamForm(forms.ModelForm):
     name = forms.CharField(label='Team Name', widget=forms.TextInput(attrs={'size':'64','maxlength':'512'}))
-    logo = forms.ImageField(label='Logo')
+    logo = forms.ImageField(label='Team Logo')
     members = forms.CharField(label='Team Members',widget=forms.TextInput(attrs={'size':'128','maxlength':'512'}))
     photo = forms.ImageField(label='Photo of Team Members')
 
