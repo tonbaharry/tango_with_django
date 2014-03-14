@@ -264,12 +264,16 @@ def register_rater(request):
         user_form = UserForm(data=request.POST)
         if user_form.is_valid():
             user = user_form.save()
+            password = user.password
             user.set_password(user.password)
             user.save()
             r = Rater(user=user, active=True)
             r.save()
             registered = True
-
+            user = authenticate(username=user.username, password=password)
+            user.backend = "django.contrib.auth.backends.ModelBackend"
+            login(request, user)
+            return HttpResponseRedirect('/showcase/')
         else:
             print user_form.errors
     else:
@@ -293,14 +297,16 @@ def register_team(request):
             if team_form.is_valid():
                 user = user_form.save()
                 # do i need these two lines anymore? Django 1.5, i think, handles this automatically now.
-                user.set_password(user.password)
+                password = user.password
+                user.set_password(password)
                 user.save()
                 t = team_form.save(commit=False)
                 t.user = user
                 t.save()
                 registered = True
-                user = authenticate(username=user.username, password=user.password)
-                return team(request, t.id)
+                user = authenticate(username=user.username, password=password)
+                login(request, user)
+                return HttpResponseRedirect('/showcase/team/'+str(t.id)+'/')
         else:
             print user_form.errors, team_form.errors
     else:
