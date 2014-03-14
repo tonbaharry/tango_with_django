@@ -59,11 +59,6 @@ def index(request):
     # Request the context of the request.
     # The context contains information such as the client's machine details, for example.
     context = RequestContext(request)
-    #demo_list = sorted(Demo.objects.all(), key = lambda d: d.rating_average, reverse=True)[:13]
-    #if len(demo_list) >=1:
-    #    hero = demo_list[0]
-    #    demo_list = demo_list[1:]
-    #context_dict = { 'demos': demo_list, 'hero': hero }
     context_dict = { }
 
     add_hero_cats_to_context_dict(context_dict)

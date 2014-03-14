@@ -6,22 +6,26 @@
         <div class="callout panel">
             <div class="row">
                 <div class="large-2 columns">
+                    <a class="th" href="/showcase/team/{{team.id}}/">
                     {% if team.logo %}
                         <img width="96" height="96" src="/media/{{team.logo}}" />
                     {% else %}
                         <img width="96" height="96" src="http://lorempixel.com/97/97/abstract/" />
                     {% endif %}
+                    </a>
                 </div>
                 <div class="large-7 columns">
                     <h1>{{team.name}}</h1>
                     <h5>{{team.members}}</h5>
                 </div>
                 <div class="large-3 columns">
+                    <a class="th" href="/showcase/team/{{team.id}}/">
                     {% if team.photo %}
-                    <img src="/media/{{team.photo}}" />
-                {% else %}
-                          <img width="256" height="128" src="http://lorempixel.com/256/128/people/" />
-                {% endif %}
+                        <img src="/media/{{team.photo}}" />
+                    {% else %}
+                        <img width="256" height="128" src="http://lorempixel.com/256/128/people/" />
+                    {% endif %}
+                     </a>
                 </div>
             </div>
         </div>
@@ -37,13 +41,15 @@
                     {% for d in demos %}
                         <div class="row">
                             <div class="large-2 columns">
-                        {% if d.screenshot %}
+
                             <a class="th" href="{{d.url}}">
-                                <img width="96" height="96" src="media/{{d.screenshot}}" alt="{{d.name}}" />
-                            </a>
-                        {% else %}
+                                {% if d.screenshot %}
+                                <img class="th" width="96" height="96" src="media/{{d.screenshot}}" alt="{{d.name}}" />
+                             {% else %}
                           <img width="96" height="96" src="http://lorempixel.com/96/{{d.id|add:96}}/technics/" />
                         {% endif %}
+                            </a>
+
 
                         </div>
                         <div class="large-6 columns">
@@ -73,10 +79,14 @@
                 </div>
 
                 </div>
+
                 <div class="row">
+                    <hr/>
+                <p>
                     {% if myteam %}
                     <a class="button tiny" href="/showcase/demo/add/">Add Demo</a>
                 {% endif %}
+                    </p>
                     </div>
 
             </div>
