@@ -37,15 +37,36 @@ def add_isteam_to_context_dict(context_dict, team):
         context_dict['isteam'] = False
         context_dict['currteam'] = None
 
+def add_hero_cats_to_context_dict(context_dict,catid=None):
+    if catid:
+        demos = Demo.objects.filter(category=catid)
+    else:
+        demos = Demo.objects.all()
+
+    demo_list = sorted(demos, key = lambda d: d.rating_average, reverse=True)[:13]
+    if len(demo_list) >=1:
+        hero = demo_list[0]
+        demo_list = demo_list[1:]
+        context_dict['hero'] = hero
+        context_dict['demos'] = demo_list
+    else:
+        context_dict['hero'] = None
+        context_dict['demos'] = None
+
+
+
 def index(request):
     # Request the context of the request.
     # The context contains information such as the client's machine details, for example.
     context = RequestContext(request)
-    demo_list = sorted(Demo.objects.all(), key = lambda d: d.rating_average, reverse=True)[:10]
-    if len(demo_list) >=1:
-        hero = demo_list[0]
-        demo_list = demo_list[1:]
-    context_dict = { 'demos': demo_list, 'hero': hero }
+    #demo_list = sorted(Demo.objects.all(), key = lambda d: d.rating_average, reverse=True)[:13]
+    #if len(demo_list) >=1:
+    #    hero = demo_list[0]
+    #    demo_list = demo_list[1:]
+    #context_dict = { 'demos': demo_list, 'hero': hero }
+    context_dict = { }
+
+    add_hero_cats_to_context_dict(context_dict)
     t = get_team(request.user)
     add_isteam_to_context_dict(context_dict, t)
     return render_to_response('showcase/index.html', context_dict, context)
@@ -53,10 +74,17 @@ def index(request):
 
 def category_show(request, catid):
     context = RequestContext(request)
-    demo_list = Demo.objects.filter(category=catid)
+    context_dict = { }
+    add_hero_cats_to_context_dict(context_dict, catid)
+
+    #demo_list = Demo.objects.filter(category=catid)
     cat_list = Category.objects.all()
     cat = Category.objects.get(id=catid)
-    context_dict = {'demos': demo_list, 'cats':cat_list, 'catid': catid, 'cat':cat}
+
+    context_dict['cats']=cat_list
+    context_dict['catid']=catid
+    context_dict['cat']=cat
+
     t = get_team(request.user)
     add_isteam_to_context_dict(context_dict, t)
 

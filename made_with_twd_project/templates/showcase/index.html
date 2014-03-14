@@ -45,17 +45,24 @@
                             {% endif %}
                             </div>
                             <div class="row">
-                                <h5><a href="/showcase/demo/show/{{d.id}}/">{{ d.name }}</a> </h5>
-                                <h6>{{d.tagline}}</h6>
-                                Created by: <a href="/showcase/team/{{d.team.id}}/">{{d.team.name}}</a>
+
                             </div>
-                            <div class="row">
-                                {% if d.rating_average > 2 %}
+                            <div class="row" >
+                                <h5>{% if d.rating_average > 2 %}
                                     <span class="label success round">{{d.rating_average}}</span>
                                 {% else %}
                                     <span class="label alert round">{{d.rating_average}}</span>
                                 {% endif %}
+                                    <a href="/showcase/demo/show/{{d.id}}/">{{ d.name }}</a>
+                                   </h5>
+                                <h6 style="min-height:20px">{{d.tagline}}</h6>
+
+                           </div>
+                            <div class="row">
+
+
                             </div>
+
                         </div>
                     {% cycle '' '' '' '</div><hr />' %}
                     {% endfor %}
