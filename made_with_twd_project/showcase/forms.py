@@ -27,7 +27,7 @@ class TeamForm(forms.ModelForm):
 
 
 class RatingForm(forms.ModelForm):
-    comment = forms.CharField(label='What do you think of this app?', widget=forms.Textarea)
+    comment = forms.CharField(label='What do you think of this app?', widget=forms.Textarea(attrs={'rows':'5','maxlength':'512'}))
     score = forms.ChoiceField(label='How do you rate this app?', choices = RATING_CHOICES)
     class Meta:
         model = Rating

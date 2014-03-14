@@ -166,7 +166,7 @@ def demo_add(request):
     t = get_team(request.user)
     if t:
         if request.method == 'POST':
-            demo_form = DemoForm(data=request.POST)
+            demo_form = DemoForm(request.POST, request.FILES )
             if demo_form.is_valid():
                 demo = demo_form.save(commit=False)
                 demo.team = t
@@ -209,7 +209,7 @@ def demo_edit(request, demoid=None):
             demo = Demo(team=t)
         #Could use this instead -> if request.POST:
         if request.method == 'POST':
-            demo_form = DemoForm(data=request.POST, instance=demo)
+            demo_form = DemoForm(request.POST, request.FILES, instance=demo)
             if demo_form.is_valid():
                 demo_form.save()
                 return HttpResponseRedirect('/showcase/team/'+str(t.id)+'/')
@@ -292,7 +292,7 @@ def register_team(request):
     registered = False
     if request.method == 'POST':
         user_form = UserForm(data=request.POST)
-        team_form = TeamForm(request.POST, request.FILES )
+        team_form = TeamForm(request.POST, request.FILES)
         if user_form.is_valid():
             if team_form.is_valid():
                 user = user_form.save()
