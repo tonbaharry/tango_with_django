@@ -8,13 +8,12 @@
             <div class="row">
                 <div class="large-4 columns">
 
-
                     {% if hero.screenshot %}
                             <a class="th" href="{{hero.url}}">
                             <img width="256" height="256" src="media/{{hero.screenshot}}" alt="{{hero.name}}" />
                             </a>
                     {% else %}
-                            <img width="256" height="256" src="http://placehold.it/256x256" />
+                            <img width="256" height="256" src="http://lorempixel.com/256/256/abstract/" />
                         {% endif %}
 
 
@@ -47,7 +46,7 @@
                                 <img src="media/{{demo.screenshot}}" width="128" height="128" alt="{{demo.name}}" />
                                 </a>
                             {% else %}
-                                <img width="128" height="128" src="http://placehold.it/128x128" />
+                                <img width="128" height="128" src="http://lorempixel.com/128/128/abstract/" />
                             {% endif %}
                             </div>
                             <div class="row">
