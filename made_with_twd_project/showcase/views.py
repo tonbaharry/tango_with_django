@@ -170,6 +170,9 @@ def demo_add(request):
             if demo_form.is_valid():
                 demo = demo_form.save(commit=False)
                 demo.team = t
+                if 'screenshot' in request.FILES:
+                    demo.logo = request.FILES['screenshot']
+
                 demo.save()
                 added = True
                 return HttpResponseRedirect('/showcase/team/'+str(t.id)+'/')
