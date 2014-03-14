@@ -166,7 +166,7 @@ def demo_add(request):
     t = get_team(request.user)
     if t:
         if request.method == 'POST':
-            demo_form = DemoForm(request.POST, request.FILES )
+            demo_form = DemoForm(data=request.POST)
             if demo_form.is_valid():
                 demo = demo_form.save(commit=False)
                 demo.team = t
