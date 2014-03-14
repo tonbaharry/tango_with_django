@@ -5,7 +5,8 @@
     <div class="row">
         <div class="callout panel">
             <div class="row">
-                <div class="large-8 columns">
+
+                <div class="large-9 columns">
                      <h1><a href="{{demo.url}}">{{ demo.name }}</a></h1>
                      <h3>{{demo.tagline}}</h3>
                      <h5>Created by: <a href="/showcase/team/{{team.id}}/">{{team.name}}</a></h5>
@@ -19,12 +20,16 @@
                      <h6>Category: <a href="/showcase/cats/{{demo.category.id}}/">{{ demo.category.name }}</a></h6>
 
                 </div>
-                <div class="large-4 columns">
+                <div class="large-3 columns">
+
                     {% if demo.screenshot %}
-                    <a class="th" href="{{demo.url}}">
-                        <img src="media/{{demo.screenshot}}" alt="{{demo.name}}" />
-                        </a>
-                    {% endif %}
+                            <a class="th" href="{{d.url}}">
+                                <img width="256" height="256" src="media/{{demo.screenshot}}" alt="{{demo.name}}" />
+                            </a>
+                        {% else %}
+                          <img width="256" height="256" src="http://lorempixel.com/256/{{demo.id|add:256}}/technics/" />
+                        {% endif %}
+
                 </div>
             </div>
             <div class="row">

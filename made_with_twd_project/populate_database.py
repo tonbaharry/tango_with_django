@@ -4,11 +4,12 @@ def populate():
     itech= add_cat('iTECH')
     dim1 = add_cat('DIM3-GLA')
     dim2  = add_cat('DIM3-SIT')
+    twdreaders = add_cat('TwD Readers')
     other = add_cat('Other')
 
-    milad = add_rater('milad','test','Milad','Jones','milad@jones.com')
-    fergus = add_rater('fergus','test','Fergus','Smyth','fergus@smyth.com')
-    doug = add_rater('doug','test','Doug','McTaggert','doug@taggert.com')
+    larry = add_rater('larry','test','larry','Jones','larry@jones.com')
+    mark = add_rater('mark','test','mark','Smyth','mark@smyth.com')
+    charlie = add_rater('charlie','test','Doug','McTaggert','doug@taggert.com')
 
     ateam = add_team('alpha','test','Adam','Smith','', 'AlphaNoobs','Adam, Bob, Charlie')
     bteam = add_team('beta','test','Danny','DeVito', '','BetaMaxs','Danny, Eddy, Freddy')
@@ -19,11 +20,10 @@ def populate():
     rm  = add_demo(gteam, other, 'RetrieveMe','Test your site searching skills', 'A game designed to test how good you are at finding information on Glasgow Unis website',2014, 'http://www.retrieveme.info')
 
 
-    add_rating(milad, pf, 'It was really good!', 4)
-    add_rating(milad, asg, 'Really abstract - not sure I follow what is happening', 2)
-    add_rating(milad, rm, 'Works great - but the gameplay was too easy', 4)
-    add_rating(fergus, asg, 'Odd. Seriously Odd. I do not get it.', 1)
-    add_rating(doug, rm, 'Lots of fun to play - slick and easy to use.', 5)
+    add_rating(larry, pf, 'It was really good!', 4)
+    add_rating(larry, asg, 'Really abstract - not sure I followed what was happening.', 2)
+    add_rating(larry, rm, 'Works great - but the gameplay was too easy. I scored lots of points :-)', 4)
+    add_rating(mark, asg, 'Odd. Seriously Odd. I do not get it.', 1)
 
 
 def add_cat(name):

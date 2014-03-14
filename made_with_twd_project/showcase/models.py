@@ -64,7 +64,7 @@ class Demo(models.Model):
 class Rating(models.Model):
     rater = models.ForeignKey(Rater)
     demo = models.ForeignKey(Demo)
-    comment = models.CharField(max_length=128)
+    comment = models.CharField(max_length=512)
     score = models.IntegerField(default=1, choices=RATING_CHOICES)
 
     def __unicode__(self):

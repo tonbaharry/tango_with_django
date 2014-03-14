@@ -2,6 +2,7 @@
 
 {% block body_block %}
      <div class="row">
+         <h2>Team</h2>
         <div class="callout panel">
             <div class="row">
                 <div class="large-2 columns">
@@ -36,12 +37,12 @@
                     {% for d in demos %}
                         <div class="row">
                             <div class="large-2 columns">
-                        {% if demo.screenshot %}
-                            <a class="th" href="{{demo.url}}">
-                                <img width="96" height="96" src="media/{{demo.screenshot}}" alt="{{demo.name}}" />
+                        {% if d.screenshot %}
+                            <a class="th" href="{{d.url}}">
+                                <img width="96" height="96" src="media/{{d.screenshot}}" alt="{{d.name}}" />
                             </a>
                         {% else %}
-                          <img width="96" height="96" src="http://lorempixel.com/96/96/technics/" />
+                          <img width="96" height="96" src="http://lorempixel.com/96/{{d.id|add:96}}/technics/" />
                         {% endif %}
 
                         </div>
