@@ -42,7 +42,10 @@ def index(request):
     # The context contains information such as the client's machine details, for example.
     context = RequestContext(request)
     demo_list = sorted(Demo.objects.all(), key = lambda d: d.rating_average, reverse=True)[:10]
-    context_dict = { 'demos': demo_list }
+    if len(demo_list) >=1:
+        hero = demo_list[0]
+        demo_list = demo_list[1:]
+    context_dict = { 'demos': demo_list, 'hero': hero }
     t = get_team(request.user)
     add_isteam_to_context_dict(context_dict, t)
     return render_to_response('showcase/index.html', context_dict, context)

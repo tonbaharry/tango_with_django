@@ -1,79 +1,90 @@
 {% extends 'showcase/base.html' %}
 
 {% block body_block %}
-        <div>
-
-
-            <div>
-                <div>
+     <div class="row">
+        <div class="callout panel">
+            <div class="row">
+                <div class="large-2 columns">
                     {% if team.logo %}
-                        <img width="64" height="64" src="/media/{{team.logo}}" />
+                        <img width="96" height="96" src="/media/{{team.logo}}" />
                     {% else %}
-                        <img width="64" height="64" src="http://placehold.it/64x64" />
+                        <img width="96" height="96" src="http://placehold.it/96x96" />
                     {% endif %}
-                    <h1>{{team.name}}</h1>
                 </div>
-                <div>
-                <h5>Team Members: {{team.members}}</h5>
-                {% if team.photo %}
-                    Team Photo: <img src="/media/{{team.photo}}" />
+                <div class="large-7 columns">
+                    <h1>{{team.name}}</h1>
+                    <h5>{{team.members}}</h5>
+                </div>
+                <div class="large-3 columns">
+                    {% if team.photo %}
+                    <img src="/media/{{team.photo}}" />
                 {% else %}
                           <img width="256" height="128" src="http://placehold.it/256x128" />
                 {% endif %}
                 </div>
             </div>
+        </div>
 
-       </div>
+     <div class="panel">
+        <div class="row">
+            <div class="large-12 columns">
+                <div class="row">
+                <h3>Demo List</h3>
 
-        <div>
-            <h4>Demo List</h4>
-
-            <div>
-                {% if demos %}
                 <div>
+                {% if demos %}
                     {% for d in demos %}
-                    <div>
-                        <div>
+                        <div class="row">
+                            <div class="large-2 columns">
                         {% if demo.screenshot %}
                             <a class="th" href="{{demo.url}}">
-                            <img width="96" height="96" src="media/{{demo.screenshot}}" alt="{{demo.name}}" />
-                        </a>
-                    {% else %}
+                                <img width="96" height="96" src="media/{{demo.screenshot}}" alt="{{demo.name}}" />
+                            </a>
+                        {% else %}
                           <img width="96" height="96" src="http://placehold.it/96x96" />
-                {% endif %}
-                        </div>
-                        <div>
-                            <h4><a href="/showcase/demo/show/{{d.id}}/">{{ d.name }}</a> </h4>
-                            <h6>{{d.tagline}}</h6>
-                            <h6>Average Rating:
-                                {% if d.rating_average > 2 %}
-                    <span class="label success round">{{d.rating_average}}</span>
-                    {% else %}
-                    <span class="label alert round">{{d.rating_average}}</span>
-                    {% endif %}
-
-                    </h6>
-                            <a class="button tiny" href="/showcase/demo/show/{{d.id}}/">View</a>
-
-                            {% if myteam %}
-                                <a class="button tiny" href="/showcase/demo/edit/{{d.id}}/">Edit</a>
-                                <a class="button tiny" href="/showcase/demo/edit/{{d.id}}/">Delete</a>
-
-                            {% endif %}
-
+                        {% endif %}
 
                         </div>
+                        <div class="large-6 columns">
+                        <h4><a href="/showcase/demo/show/{{d.id}}/">{{ d.name }}</a> </h4>
+                        <h6>{{d.tagline}}</h6>
+                        <h6>Average Rating:
+                        {% if d.rating_average > 2 %}
+                            <span class="label success round">{{d.rating_average}}</span>
+                        {% else %}
+                            <span class="label alert round">{{d.rating_average}}</span>
+                        {% endif %}
+                        </h6>
+                        </div>
+                        <div class="large-4 columns">
+                        <a class="button tiny" href="/showcase/demo/show/{{d.id}}/">View</a>
+                        {% if myteam %}
+                            <a class="button tiny" href="/showcase/demo/edit/{{d.id}}/">Edit</a>
+                            <a class="button tiny" href="/showcase/demo/delete/{{d.id}}/">Delete</a>
+                        {% endif %}
+
                         </div>
                     </div>
                     {% endfor %}
-                <div>
                 {% else %}
                     <strong>No demos submitted. </strong>
                 {% endif %}
+                </div>
 
-        {% if myteam %}
-            <a class="button tiny" href="/showcase/demo/add/">Add Demo</a>
-        {% endif %}
+                </div>
+                <div class="row">
+                    {% if myteam %}
+                    <a class="button tiny" href="/showcase/demo/add/">Add Demo</a>
+                {% endif %}
+                    </div>
+
+            </div>
         </div>
-</div>
+     </div>
+
+
+
+
+
+
 {% endblock %}
