@@ -214,6 +214,8 @@ def demo_edit(request, demoid=None):
         if request.method == 'POST':
             demo_form = DemoForm(request.POST, request.FILES, instance=demo)
             if demo_form.is_valid():
+                if 'screenshot' in request.FILES:
+                    demo.logo = request.FILES['screenshot']
                 demo_form.save()
                 return HttpResponseRedirect('/showcase/team/'+str(t.id)+'/')
             else:
