@@ -14,11 +14,7 @@
                     Category: <a href="/showcase/cats/{{demo.category.id}}/">{{ demo.category.name }}</a><br/><br/>
 
                     Average Rating:
-                         {% if demo.rating_average > 2 %}
-                    <span class="label success round">{{demo.rating_average}}</span>
-                    {% else %}
-                    <span class="label alert round">{{demo.rating_average}}</span>
-                    {% endif %}
+                    {% include 'showcase/rating_score.html' %}
 <br/>
 
                 </div>
