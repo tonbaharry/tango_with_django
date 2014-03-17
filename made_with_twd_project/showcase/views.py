@@ -91,7 +91,7 @@ def demo_show(request, demoid):
     #TODO(leifos): add in error handlding and checking, handle gracefully
     demo = Demo.objects.get(id=demoid)
     team = demo.team
-    ratings = Rating.objects.filter(demo=demo)
+    ratings = Rating.objects.filter(demo=demo).order_by('-score')
     rater = get_rater(request.user)
     can_rate = False
     if rater:
