@@ -43,7 +43,7 @@ def add_hero_cats_to_context_dict(context_dict,catid=None):
     else:
         demos = Demo.objects.all()
 
-    demo_list = sorted(demos, key = lambda d: d.rating_average, reverse=True)[:13]
+    demo_list = sorted(demos, key = lambda d: d.rating_average, reverse=True)
     if len(demo_list) >=1:
         hero = demo_list[0]
         demo_list = demo_list[1:]
